@@ -1,0 +1,4 @@
+creation_rules:
+  - path_regex: .*\.sops\.ya?ml$
+    encrypted_suffix: Templates
+    age: age155d2jtjazy7m54j8p24p75z3v8aajacantxffwmvkyc83f8m0yxq2lyjgj
