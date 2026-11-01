@@ -1,0 +1,36 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: jellyfin
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://jellyfin.github.io/jellyfin-helm
+    chart: jellyfin
+    targetRevision: 3.7.0
+    helm:
+      releaseName: jellyfin
+      valuesObject:
+        persistence:
+          config:
+            enabled: true
+            storageClass: "jellyfin-config-storageclass"
+          cache:
+            enabled: true
+            storageClass: "jellyfin-cache-storageclass"
+          media:
+            enabled: true
+            storageClass: "jellyfin-media-storageclass"
+            size: 7Ti
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: jellyfin
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
