@@ -1,0 +1,26 @@
+clusterName: parkiki-talos
+clusterEndpoint: https://192.168.1.10:6443
+kubernetesVersion: 1.37.1
+talosVersion: 1.14.5
+
+# Extensions live in schematic.yaml; topf computes the schematic ID from it and
+# builds the installer image from talosVersion + schematic.
+schematicId: "@schematic.yaml"
+
+# Values shared by the patch templates (available as .Data.<key>).
+data:
+  vip: 192.168.1.10
+  gateway: 192.168.1.1
+  nameserver: 192.168.1.1
+  prefix: 24
+
+nodes:
+  - host: cp1
+    ip: 192.168.1.11
+    role: control-plane
+  - host: cp2
+    ip: 192.168.1.12
+    role: control-plane
+  - host: cp3
+    ip: 192.168.1.13
+    role: control-plane
