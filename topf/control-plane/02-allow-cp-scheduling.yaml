@@ -1,0 +1,13 @@
+# Run workloads on the control planes (the cluster has no workers).
+# On Talos >= 1.14 the old `cluster.allowSchedulingOnControlPlanes: true` field is
+# rejected next to the new multi-document config, so remove the NoSchedule taint instead.
+# The second delete drops the "exclude from external load balancers" label; without it,
+# MetalLB won't announce services from these nodes.
+apiVersion: v1alpha1
+kind: KubeNodeConfig
+labels:
+  node.kubernetes.io/exclude-from-external-load-balancers:
+    $patch: delete
+taints:
+  node-role.kubernetes.io/control-plane:
+    $patch: delete
