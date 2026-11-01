@@ -1,0 +1,28 @@
+apiVersion: isindir.github.com/v1alpha3
+kind: SopsSecret
+metadata:
+    name: porkbun-credentials
+    namespace: traefik
+    annotations:
+        argocd.argoproj.io/sync-wave: "-1" # create the Secret before Traefik starts
+spec:
+    secretTemplates:
+        - name: ENC[AES256_GCM,data:Pu212IWBoP1tKDLDArqtnmgohw==,iv:qrT3hPejuFbW+wdH4+A6jJR4cvYHvQLlMkSGF99n01U=,tag:ougMCB2Kwa30Ztw8w/f33A==,type:str]
+          stringData:
+            api-key: ENC[AES256_GCM,data:qONLF5VIwJyQYCAF046J60HLdIpMmwZ4nR2N8/npcJfrOpMSFVPxcRiUMHp4WIvn7SmSc8vnizKTdQXMT1hrhbhEaM4=,iv:uuLUQNVYs/DyRPnM526/Ni/qXhg1tPVP9MMWsTJLry0=,tag:Cqi+O02d9Kty/rCPrA0bzg==,type:str]
+            secret-key: ENC[AES256_GCM,data:BnbGjWUoYmNS9/s1XR9qniR+HFNV4seTvbbVGFXQnfkdZlAqytyH2h521ZHpiW0nEU7zGoe25i20rZVNI4pEohR9BdI=,iv:ZfIDDrt/rc/cslf1w22gH1DgCNFto+xTFxgklx+QigU=,tag:CBlFCmvRQH7fg0xUO0rjAw==,type:str]
+sops:
+    age:
+        - enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBET2FlaEF2RlE0VlRSRnJP
+            c2c5MGNKUm5YZzg5K2V4Um1CQ3EzQTRncVRvCkFXVnBJS2FscDFMNC8xMHBRVitN
+            RXhTekpHWlNsU1J0UEtBc1ljQm5qTHMKLS0tIEtNS2phajhuUFVFQVRUTTVqZ3RQ
+            WExMUWZyVmk1Y0ZvMmNPZmROR3ZlZWMKKpfTabGNKFYT/o3EMmhsRgGPDsWX2qGL
+            m6ngpY/CTSBsrrMvn//OQQ7G9NI59M5an1Es6gMjyun04ALRcQVsaQ==
+            -----END AGE ENCRYPTED FILE-----
+          recipient: age155d2jtjazy7m54j8p24p75z3v8aajacantxffwmvkyc83f8m0yxq2lyjgj
+    encrypted_suffix: Templates
+    lastmodified: "2026-11-01T23:05:57Z"
+    mac: ENC[AES256_GCM,data:+aamlOyxXSQFDModdmmipnnCrTybbAJzVppW1IemV//ndEgjsDm8iZ9eBJPaHbN52P0vmy2stYhfGqT6BkK9ZFRIWrtyTXwy/TLpq+mivGh3Ph/VxE47hIvoE3qqLGYdS9E/v2/OhcEJXTfEy/ivEdjAHK3UnX4jysSr0zp2mb8=,iv:7h9FBVOEi20kzgZyvU/NE2rrRvJnCuftwaFV4rh1ez0=,tag:+OC6zV1rIZsZ0jZf+N8Ctw==,type:str]
+    version: 3.13.3

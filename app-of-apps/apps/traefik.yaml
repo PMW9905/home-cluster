@@ -1,0 +1,58 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: traefik
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  sources:
+    - repoURL: https://traefik.github.io/charts
+      chart: traefik
+      targetRevision: 42.2.0
+      helm:
+        releaseName: traefik
+        valuesObject:
+          service:
+            annotations:
+              metallb.io/loadBalancerIPs: 192.168.1.20
+          ports:
+            websecure:
+              http:
+                tls:
+                  enabled: true
+                  certResolver: letsencrypt
+                  domains:
+                    - main: "*.parkiki.org"
+          certificatesResolvers:
+            letsencrypt:
+              acme:
+                email: pmw9905@gmail.com
+                storage: /data/acme.json
+                dnsChallenge:
+                  provider: porkbun
+          env:
+            - name: PORKBUN_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: porkbun-credentials
+                  key: api-key
+            - name: PORKBUN_SECRET_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: porkbun-credentials
+                  key: secret-key
+    - repoURL: https://github.com/PMW9905/home-cluster.git
+      targetRevision: main
+      path: manifests/traefik
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: traefik
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
