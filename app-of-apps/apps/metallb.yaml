@@ -1,0 +1,48 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: metallb
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  sources:
+    - repoURL: https://metallb.github.io/metallb
+      chart: metallb
+      targetRevision: 0.16.1
+      helm:
+        releaseName: metallb
+        valuesObject:
+          speaker:
+            # Talos labels control-plane nodes with
+            # node.kubernetes.io/exclude-from-external-load-balancers, which MetalLB
+            # honors by default. With an all-control-plane cluster nothing would
+            # ever be advertised.
+            ignoreExcludeLB: true
+    - repoURL: https://github.com/PMW9905/home-cluster.git
+      targetRevision: main
+      path: manifests/metallb
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: metallb-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 10s
+        factor: 2
+        maxDuration: 3m
+    # The speaker needs host networking and extra capabilities, which Talos'
+    # default Pod Security admission (baseline) rejects.
+    managedNamespaceMetadata:
+      labels:
+        pod-security.kubernetes.io/enforce: privileged
+        pod-security.kubernetes.io/audit: privileged
+        pod-security.kubernetes.io/warn: privileged
