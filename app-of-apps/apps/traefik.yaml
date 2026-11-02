@@ -17,6 +17,9 @@ spec:
           service:
             annotations:
               metallb.io/loadBalancerIPs: 192.168.1.20
+          providers:
+            kubernetesCRD:
+              allowExternalNameServices: true
           ports:
             websecure:
               http:

@@ -1,30 +1,13 @@
-# Nextcloud runs on TrueNAS, outside the cluster. A Service with no selector plus a
-# hand-written EndpointSlice points Traefik at it.
+# Nextcloud runs on TrueNAS, outside the cluster. Traefik must have
+# providers.kubernetesCRD.allowExternalNameServices enabled to use this.
 apiVersion: v1
 kind: Service
 metadata:
   name: nextcloud-external
   namespace: nextcloud
 spec:
+  type: ExternalName
+  externalName: truenas.parkiki.org
   ports:
     - name: http
       port: 30027
-      targetPort: 30027
----
-apiVersion: discovery.k8s.io/v1
-kind: EndpointSlice
-metadata:
-  name: nextcloud-external
-  namespace: nextcloud
-  labels:
-    kubernetes.io/service-name: nextcloud-external   # ties the slice to the Service
-addressType: IPv4
-ports:
-  - name: http
-    port: 30027
-    protocol: TCP
-endpoints:
-  - addresses:
-      - 192.168.1.232
-    conditions:
-      ready: true
