@@ -26,3 +26,5 @@ ports:
 endpoints:
   - addresses:
       - 192.168.1.232
+    conditions:
+      ready: true
