@@ -14,7 +14,6 @@ spec:
     helm:
       releaseName: jellyfin
       valuesObject:
-        replicaCount: 0
         persistence:
           config:
             enabled: true
