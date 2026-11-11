@@ -1,0 +1,35 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: audiobookshelf
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://gitlab.com/api/v4/projects/57546317/packages/helm/nightly
+    chart: audiobookshelf
+    targetRevision: 0.0.2-nightly.60
+    helm:
+      releaseName: audiobookshelf
+      valuesObject:
+        nfs:
+          - server: truenas.parkiki.org
+            storage: 100Gi
+            name: media
+            share:
+              - name: audiobooks
+                path: /mnt/fast_storage/k3s/audiobookshelf/audiobooks
+                mountPath: /audiobooks
+                readOnly: true
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: audiobookshelf
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
