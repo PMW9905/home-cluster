@@ -14,6 +14,13 @@ spec:
     helm:
       releaseName: audiobookshelf
       valuesObject:
+        persistence:
+          config:
+            storageClass: audiobookshelf-config-storageclass
+            size: 1Gi
+          metadata:
+            storageClass: audiobookshelf-metadata-storageclass
+            size: 10Gi
         nfs:
           - server: truenas.parkiki.org
             storage: 100Gi
